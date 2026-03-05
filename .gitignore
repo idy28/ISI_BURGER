@@ -1,0 +1,66 @@
+# -------------------------------
+# Laravel / PHP
+# -------------------------------
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/bootstrap/cache/*.php
+.phpactor.json
+.phpunit.result.cache
+/.phpunit.cache
+.env
+.env.*.backup
+.env.production
+Homestead.json
+Homestead.yaml
+auth.json
+
+# -------------------------------
+# IDEs
+# -------------------------------
+/.idea
+/.vscode
+/.zed
+/.fleet
+/.nova
+
+# -------------------------------
+# System files
+# -------------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------------
+# Docker
+# -------------------------------
+docker-compose.override.yml
+.env.docker
+/.docker
+
+# -------------------------------
+# Node / npm / yarn
+# -------------------------------
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+.pnpm-debug.log*
+
+# -------------------------------
+# Tests & coverage
+# -------------------------------
+/coverage
+/tests/_output
+/phpunit.xml.cache
+
+# -------------------------------
+# Misc
+# -------------------------------
+*.log
+*.tmp
+*.swp
+*.bak
+*.old
