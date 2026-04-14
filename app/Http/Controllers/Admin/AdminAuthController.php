@@ -30,7 +30,7 @@ class AdminAuthController extends Controller
             session(['admin_logged_in' => true]);
             session(['admin_login_at' => now()]);
             return redirect()->route('admin.dashboard')
-                ->with('success', 'Welcome to the admin area!');
+                ->with('success', 'Bienvenue dans l’espace administrateur!');
         }
 
         return back()->withErrors(['password' => 'Identifiant ou mot de passe incorrect. Veuillez réessayer.']);

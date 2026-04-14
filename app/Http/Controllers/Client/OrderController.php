@@ -21,10 +21,10 @@ class OrderController extends Controller
             'items.*.price' => 'required|numeric',
             'items.*.quantity' => 'required|integer|min:1|max:20',
         ], [
-            'customer_name.required' => 'Your name is required.',
-            'customer_phone.required' => 'Your phone number is required.',
-            'items.required' => 'Your cart is empty.',
-            'items.min' => 'Add at least one burger to your order.',
+            'customer_name.required' => 'Votre nom est obligatoire.',
+            'customer_phone.required' => 'Votre numéro de téléphone est obligatoire.',
+            'items.required' => 'Votre panier est vide.',
+            'items.min' => 'Ajoutez au moins un burger à votre commande.',
         ]);
 
         // Check stock and calculate total within a transaction
@@ -41,21 +41,21 @@ class OrderController extends Controller
                 if (!$burger) {
                     DB::rollBack();
                     return back()->withErrors([
-                        'stock' => "Product \"{$item['name']}\" not found."
+                        'stock' => "Produit \"{$item['name']}\" introuvable."
                     ])->withInput();
                 }
 
                 if ($burger->isOutOfStock()) {
                     DB::rollBack();
                     return back()->withErrors([
-                        'stock' => "Sorry, \"{$burger->name}\" is no longer available."
+                        'stock' => "Désolé, \"{$burger->name}\" n'est plus disponible."
                     ])->withInput();
                 }
 
                 if ($burger->stock < $item['quantity']) {
                     DB::rollBack();
                     return back()->withErrors([
-                        'stock' => "Insufficient stock for \"{$burger->name}\". Available: {$burger->stock}."
+                        'stock' => "Stock insuffisant pour \"{$burger->name}\". Disponible: {$burger->stock}."
                     ])->withInput();
                 }
 
@@ -92,14 +92,14 @@ class OrderController extends Controller
 
             DB::commit();
 
-            // Redirect to confirmation page
-            return redirect()->route('order.confirmation', ['order' => $order]);
+            // Redirect to confirmation page (use correct route name)
+            return redirect()->route('orders.confirmation', ['order' => $order->id]);
 
         } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'An error occurred. Please try again.'
+                'error' => "Une erreur s'est produite. Veuillez réessayer."
             ])->withInput();
         }
     }
@@ -107,6 +107,7 @@ class OrderController extends Controller
     public function confirmation(Order $order)
     {
         $order->load('items');
-        return view('client.confirmation', compact('order'));
+        // The confirmation view expects a `$commande` variable
+        return view('client.confirmation', ['commande' => $order]);
     }
 }

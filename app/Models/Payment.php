@@ -9,6 +9,7 @@ class Payment extends Model
     protected $fillable = [
         'order_id',
         'amount',
+        'amount_paid',
         'payment_method',
         'payment_date',
         'notes',
@@ -16,6 +17,7 @@ class Payment extends Model
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'amount_paid' => 'decimal:2',
         'payment_date' => 'datetime',
     ];
 

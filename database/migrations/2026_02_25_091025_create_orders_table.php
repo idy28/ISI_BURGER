@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->enum('status', ['En attente', 'En preparation', 'Prete', 'Payee'])
                 ->default('En attente');
             $table->decimal('total_amount', 10, 2)->default(0);
-            $table->decimal('amount_paid', 10, 2)->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });

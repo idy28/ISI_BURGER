@@ -25,18 +25,26 @@ class DashboardController extends Controller
         $dailyRevenue = Payment::whereDate('created_at', today())->sum('amount');
 
         // Total burgers in the system
-        $totalOrders = Burger::count();
+        $totalBurgers = Burger::count();
 
         // Last 5 orders with items
         $latestOrders = Order::with('items')->latest()->take(5)->get();
 
         // Orders per month (12 months of the current year)
         $ordersPerMonth = array_fill(0, 12, 0);
-        $monthly = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        // $monthly = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        //     ->whereYear('created_at', now()->year)
+        //     ->groupBy('month')
+        //     ->pluck('total', 'month');
+
+
+        $monthly = DB::table('orders')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->whereYear('created_at', now()->year)
-            ->groupBy('month')
+            ->groupByRaw('MONTH(created_at)')
             ->pluck('total', 'month');
 
+        // dd($monthly);
         foreach ($monthly as $month => $total) {
             $ordersPerMonth[$month - 1] = $total;
         }
@@ -53,7 +61,7 @@ class DashboardController extends Controller
             'ordersInProgress',
             'ordersCompletedToday',
             'dailyRevenue',
-            'totalOrders',
+            'totalBurgers',
             'latestOrders',
             'ordersPerMonth',
             'topProducts'

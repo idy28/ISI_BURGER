@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Facture #{{ str_pad($commande->id, 5, '0', STR_PAD_LEFT) }} — ISI BURGER</title>
+  <title>Facture #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }} — ISI BURGER</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=Instrument+Sans:wght@300;400;500;600&display=swap');
 
@@ -268,7 +268,7 @@
         <div
           style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:4px;">
           Facture</div>
-        <div class="inv-number">#{{ str_pad($commande->id, 5, '0', STR_PAD_LEFT) }}</div>
+        <div class="inv-number">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</div>
         <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;">Émise le
           {{ now()->format('d/m/Y · H:i') }}
         </div>
@@ -280,17 +280,17 @@
       <div class="inv-info-grid">
         <div class="inv-info-box">
           <div class="inv-info-label">Client</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:4px;">{{ $commande->nom_client }}</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:4px;">{{ $order->nom_client }}</div>
           <div style="font-size:12.5px;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:5px;">📞
-            {{ $commande->telephone_client }}
+            {{ $order->telephone_client }}
           </div>
         </div>
         <div class="inv-info-box">
-          <div class="inv-info-label">Commande</div>
+          <div class="inv-info-label">order</div>
           <div
             style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--ember);margin-bottom:4px;">
-            #{{ str_pad($commande->id, 5, '0', STR_PAD_LEFT) }}</div>
-          <div style="font-size:12.5px;color:rgba(255,255,255,0.4);">{{ $commande->created_at->format('d/m/Y · H:i') }}
+            #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</div>
+          <div style="font-size:12.5px;color:rgba(255,255,255,0.4);">{{ $order->created_at->format('d/m/Y · H:i') }}
           </div>
           <div style="font-size:12.5px;color:rgba(255,255,255,0.4);margin-top:3px;">💵 Espèces</div>
         </div>
@@ -306,22 +306,22 @@
           </tr>
         </thead>
         <tbody>
-          @foreach($commande->items as $item)
+          @foreach($order->items as $item)
             <tr>
-              <td><span style="font-weight:600;">{{ $item->burger_nom }}</span></td>
-              <td style="color:rgba(255,255,255,0.5);">{{ number_format($item->prix_unitaire, 0, ',', ' ') }} F</td>
-              <td style="color:rgba(255,255,255,0.5);">× {{ $item->quantite }}</td>
-              <td>{{ number_format($item->prix_unitaire * $item->quantite, 0, ',', ' ') }} F</td>
+              <td><span style="font-weight:600;">{{ $item->burger_name }}</span></td>
+              <td style="color:rgba(255,255,255,0.5);">{{ number_format($item->unit_price, 0, ',', ' ') }} F</td>
+              <td style="color:rgba(255,255,255,0.5);">× {{ $item->quantity }}</td>
+              <td>{{ number_format($item->unit_price * $item->quantity, 0, ',', ' ') }} F</td>
             </tr>
           @endforeach
         </tbody>
       </table>
 
       <div class="inv-totals">
-        <div class="inv-row"><span>Sous-total</span><span>{{ number_format($commande->total, 0, ',', ' ') }} F</span>
+        <div class="inv-row"><span>Sous-total</span><span>{{ number_format($order->total, 0, ',', ' ') }} F</span>
         </div>
         <div class="inv-row"><span>Taxes</span><span>Incluses</span></div>
-        <div class="inv-total-final"><span>TOTAL</span><span>{{ number_format($commande->total, 0, ',', ' ') }} F</span>
+        <div class="inv-total-final"><span>TOTAL</span><span>{{ number_format($order->total, 0, ',', ' ') }} F</span>
         </div>
       </div>
     </div>

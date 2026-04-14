@@ -4,7 +4,66 @@
 @section('topbar-actions')
   <a href="{{ route('admin.burgers.create') }}" class="btn-ember"><i class="bi bi-plus"></i>Nouveau burger</a>
 @endsection
+<style>
+  #sortSelect option {
+    background-color: black;
+    color: orangered;
+    /* pour que le texte soit visible */
+  }
 
+  /* Pagination */
+  .pagination {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+  }
+
+  .pagination li a,
+  .pagination li span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--r-md);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s var(--ease);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Liens normaux */
+  .pagination li a {
+    background: var(--glass-bg-med);
+    border: 1px solid var(--glass-border);
+    color: var(--tx-secondary);
+  }
+
+  .pagination li a:hover {
+    background: var(--glass-bg-high);
+    border-color: var(--glass-border-hi);
+    color: var(--tx-primary);
+  }
+
+  /* Page active */
+  .pagination li.active span {
+    background: linear-gradient(135deg, var(--ember), var(--ember-light));
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 16px var(--ember-glow);
+  }
+
+  /* Désactivé (prev/next sur première/dernière page) */
+  .pagination li.disabled span {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--tx-muted);
+    cursor: not-allowed;
+  }
+</style>
 @section('content')
   <!-- Filtres -->
   <form method="GET" action="{{ route('admin.burgers.index') }}">
@@ -15,7 +74,7 @@
         <input class="field" name="q" placeholder="Rechercher un burger..." style="padding-left:40px;"
           value="{{ request('q') }}">
       </div>
-      <select class="field" name="statut" style="max-width:180px;">
+      <select id="sortSelect" class="field" name="statut" style="max-width:180px;">
         <option value="">Tous les statuts</option>
         <option value="disponible" {{ request('statut') === 'disponible' ? 'selected' : '' }}>Disponible</option>
         <option value="indisponible" {{ request('statut') === 'indisponible' ? 'selected' : '' }}>Indisponible</option>

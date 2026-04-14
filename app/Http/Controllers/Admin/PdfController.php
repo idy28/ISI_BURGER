@@ -8,20 +8,20 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PdfController extends Controller
 {
-    public function generate(Order $commande)
+    public function generate(Order $order)
     {
-        if (!$commande->isReady()) {
+        if (!$order->isReady()) {
             return back()->withErrors([
                 'pdf' => 'La facture est disponible uniquement lorsque la commande est prête.'
             ]);
         }
 
-        $commande->load(['items', 'payment']);
+        $order->load(['items', 'payment']);
 
-        $pdf = Pdf::loadView('admin.facture', compact('commande'))
+        $pdf = Pdf::loadView('admin.facture', compact('order'))
             ->setPaper('a4', 'portrait');
 
-        $filename = "facture-commande-{$commande->id}.pdf";
+        $filename = "facture-commande-{$order->id}.pdf";
 
         return $pdf->download($filename);
     }

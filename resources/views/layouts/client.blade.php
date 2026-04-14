@@ -550,6 +550,16 @@
             color: var(--tx-tertiary);
             line-height: 1.4;
             margin-bottom: 10px;
+
+            display: -webkit-box;
+            /* Nécessaire pour le multi-line ellipsis */
+            -webkit-line-clamp: 2;
+            /* Limite à 2 lignes */
+            -webkit-box-orient: vertical;
+            /* Orientation verticale pour le clamp */
+            overflow: hidden;
+            /* Masque le texte qui dépasse */
+            text-overflow: ellipsis;
         }
 
         .menu-footer {
@@ -755,6 +765,33 @@
             border-color: rgba(255, 77, 26, 0.3);
         }
 
+        .qty-btn:disabled,
+        .qty-btn[disabled] {
+            opacity: 0.45;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--tx-muted);
+            border-color: rgba(255, 255, 255, 0.06);
+            pointer-events: none;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Add-circle (menu card add button) */
+
+        .add-circle:disabled,
+        .add-circle[disabled] {
+            opacity: 0.45;
+            cursor: not-allowed;
+            pointer-events: none;
+            filter: grayscale(60%);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--tx-muted);
+            border-color: rgba(255, 255, 255, 0.06);
+            transform: none;
+            box-shadow: none;
+        }
+
         .qty-num {
             font-size: 13px;
             font-weight: 700;
@@ -853,6 +890,31 @@
 
         .or-total span:last-child {
             color: var(--ember);
+        }
+
+        .stock-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 50px;
+        }
+
+        .stock-ok {
+            background: var(--s-ready);
+            color: var(--s-ready-tx);
+        }
+
+        .stock-low {
+            background: var(--s-wait);
+            color: var(--s-wait-tx);
+        }
+
+        .stock-none {
+            background: rgba(255, 80, 80, 0.12);
+            color: #FF6B6B;
         }
 
         @media(max-width:900px) {

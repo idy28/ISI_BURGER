@@ -63,9 +63,9 @@ class Burger extends Model
     {
         $this->decrement('stock', $quantity);
 
-        if ($this->stock <= 0) {
-            $this->update(['available' => false]);
-        }
+        // if ($this->stock <= 0) {
+        //     $this->update(['available' => false]);
+        // }
     }
 
     public function getImageUrlAttribute(): string

@@ -144,8 +144,12 @@ class Order extends Model
         return self::$statusMap[$slug] ?? $slug;
     }
 
-    public static function labelToSlug(string $label): string
+    public static function labelToSlug(?string $label): string
     {
+        if (is_null($label)) {
+            return ''; // ou 'inconnu', ou un slug par défaut
+        }
+
         $flip = array_flip(self::$statusMap);
         return $flip[$label] ?? $label;
     }

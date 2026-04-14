@@ -257,6 +257,9 @@
               style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--tx-tertiary);font-size:15px;"></i>
             <input class="field" name="username" placeholder="username" style="padding-left:40px;"
               autocomplete="username">
+            @error('username')
+              <span class="form-error">{{ $message }}</span>
+            @enderror
           </div>
         </div>
         <div class="field-group">
@@ -271,6 +274,9 @@
               style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tx-tertiary);cursor:pointer;"><i
                 class="bi bi-eye"></i></button>
           </div>
+          @error('password')
+            <span class="form-error">{{ $message }}</span>
+          @enderror
         </div>
         <button type="submit" class="btn-ember" style="margin-top:4px;">
           <i class="bi bi-arrow-right-circle-fill"></i> Se connecter

@@ -13,11 +13,25 @@ class BurgerController extends Controller
     {
         $query = Burger::query();
 
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+        // if ($request->filled('search')) {
+        //     $query->where('name', 'like', '%' . $request->search . '%');
+        // }
+
+        // Recherche par nom
+        if ($request->filled('q')) {
+            $query->where('name', 'like', '%' . $request->q . '%');
         }
 
-        $burgers = $query->orderBy('name')->paginate(12);
+        // Filtre par statut
+        if ($request->filled('statut')) {
+            if ($request->statut === 'disponible') {
+                $query->where('available', true);
+            } elseif ($request->statut === 'indisponible') {
+                $query->where('available', false);
+            }
+        }
+
+        $burgers = $query->orderBy('name')->paginate(15);
 
         return view('admin.burgers.index', compact('burgers'));
     }
@@ -88,7 +102,7 @@ class BurgerController extends Controller
         $burger->update($data);
 
         return redirect()->route('admin.burgers.index')
-            ->with('success', 'Burger updated successfully!');
+            ->with('success', 'Le burger a été mis à jour avec succès.');
     }
 
     public function destroy(Burger $burger)
@@ -100,14 +114,14 @@ class BurgerController extends Controller
         $burger->delete();
 
         return redirect()->route('admin.burgers.index')
-            ->with('success', 'Burger deleted.');
+            ->with('success', 'Le burger a été supprimé avec succès.');
     }
 
     public function toggleAvailable(Burger $burger)
     {
         $burger->update(['available' => !$burger->available]);
 
-        $status = $burger->available ? 'activated' : 'deactivated';
-        return back()->with('success', "Burger {$status}.");
+        $status = $burger->available ? 'activé' : 'désactivé';
+        return back()->with('success', "Le burger a été {$status}.");
     }
 }

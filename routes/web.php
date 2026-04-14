@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\PdfController;
 Route::get('/', [CatalogueController::class, 'index'])->name('catalogue');
 Route::post('/commande', [ClientCommandeController::class, 'store'])->name('orders.store');
 Route::get('/commande/confirmation/{order}', [ClientCommandeController::class, 'confirmation'])->name('orders.confirmation');
+Route::get('/burgers/{id}', [CatalogueController::class, 'show'])->name('burger.show');
 
 // ══════════════════════════════════════════════════════════
 //  ESPACE ADMIN — Protégé par middleware

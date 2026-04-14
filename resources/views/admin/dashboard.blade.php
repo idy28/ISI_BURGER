@@ -13,7 +13,7 @@
           style="color:var(--ember);font-size:20px;"></i></div>
       <div>
         <div class="stat-val">{{ $ordersInProgress }}</div>
-        <div class="stat-lbl">En cours</div>
+        <div class="stat-lbl">Commandes en cours</div>
       </div>
     </div>
     <div class="stat-card glass" style="--card-glow:rgba(0,230,130,0.1);">
@@ -21,7 +21,7 @@
           style="color:var(--s-ready-tx);font-size:20px;"></i></div>
       <div>
         <div class="stat-val" style="color:var(--s-ready-tx);">{{ $ordersCompletedToday }}</div>
-        <div class="stat-lbl">Validées</div>
+        <div class="stat-lbl">Commandes validées dans la journée</div>
       </div>
     </div>
     <div class="stat-card glass" style="--card-glow:rgba(56,198,255,0.1);">
@@ -29,15 +29,15 @@
           style="color:var(--s-prep-tx);font-size:20px;"></i></div>
       <div>
         <div class="stat-val" style="color:var(--s-prep-tx);">{{ number_format($dailyRevenue, 0, ',', ' ') }}</div>
-        <div class="stat-lbl">Recettes F</div>
+        <div class="stat-lbl">Recettes de la journée F</div>
       </div>
     </div>
     <div class="stat-card glass" style="--card-glow:rgba(176,142,255,0.1);">
       <div class="stat-icon-wrap" style="background:var(--s-paid);"><i class="bi bi-box-seam"
           style="color:var(--s-paid-tx);font-size:20px;"></i></div>
       <div>
-        <div class="stat-val" style="color:var(--s-paid-tx);">{{ $totalOrders }}</div>
-        <div class="stat-lbl">Au catalogue</div>
+        <div class="stat-val" style="color:var(--s-paid-tx);">{{ $totalBurgers }}</div>
+        <div class="stat-lbl">Burgers au catalogue</div>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
           <th>Montant</th>
           <th>Statut</th>
           <th>Date</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -88,15 +88,15 @@
             </td>
             <td class="fw-bold">{{ number_format($c->total, 0, ',', ' ') }} F</td>
             <td>
-              @php $badges = ['en_attente' => 'badge-wait', 'en_preparation' => 'badge-prep', 'prete' => 'badge-ready', 'payee' => 'badge-paid'];
-              $labels = ['en_attente' => 'En attente', 'en_preparation' => 'En préparation', 'prete' => 'Prête', 'payee' => 'Payée']; @endphp
-              <span class="badge {{ $badges[$c->statut] ?? '' }}">{{ $labels[$c->statut] ?? $c->statut }}</span>
+              @php $badges = ['En attente' => 'badge-wait', 'En preparation' => 'badge-prep', 'Prete' => 'badge-ready', 'Payee' => 'badge-paid'];
+              $labels = ['En attente' => 'En attente', 'En preparation' => 'En préparation', 'Prete' => 'Prête', 'Payee' => 'Payée']; @endphp
+              <span class="badge {{ $badges[$c->status] ?? '' }}">{{ $labels[$c->status] ?? $c->status }}</span>
             </td>
             <td class="text-muted fs-xs">{{ $c->created_at->format('d/m H:i') }}</td>
             <td>
               <div style="display:flex;gap:4px;">
                 <a href="{{ route('admin.orders.show', $c->id) }}" class="btn-icon ember"><i class="bi bi-eye"></i></a>
-                @if($c->statut === 'prete')
+                @if($c->status === 'Prete' || $c->status === 'Payee')
                   <a href="{{ route('admin.pdf.generate', $c->id) }}" class="btn-icon ember" target="_blank"><i
                       class="bi bi-file-earmark-pdf"></i></a>
                 @endif
@@ -116,6 +116,7 @@
 @push('scripts')
   <script>
     const barData = @json($ordersPerMonth);
+    console.log('Bar Data:', barData);
     const donutData = @json($topProducts);
 
     new Chart(document.getElementById('chartBar'), {
@@ -142,7 +143,7 @@
       type: 'doughnut',
       data: {
         labels: donutData.map(d => d.nom),
-        datasets: [{ data: donutData.map(d => d.total), backgroundColor: ['#FF4D1A', 'rgba(255,77,26,0.6)', 'rgba(0,174,255,0.7)', 'rgba(140,100,255,0.7)', 'rgba(0,230,130,0.7)'], borderWidth: 0, hoverOffset: 10 }]
+        datasets: [{ data: donutData.map(d => d.total), backgroundColor: ['#FF4D1A', 'rgba(184, 44, 156, 0.6)', 'rgba(0,174,255,0.7)', 'rgba(140,100,255,0.7)', 'rgba(0,230,130,0.7)'], borderWidth: 0, hoverOffset: 10 }]
       },
       options: {
         responsive: true, cutout: '68%',

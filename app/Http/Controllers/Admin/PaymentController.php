@@ -50,7 +50,8 @@ class PaymentController extends Controller
     {
         $request->validate([
             'order_id' => 'required|exists:orders,id',
-            'amount' => 'required|numeric|min:0',
+            // 'amount' => 'required|numeric|min:0',
+            'amount_paid' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string|max:255',
         ], [
             'amount.required' => 'The amount is required.',
@@ -58,25 +59,29 @@ class PaymentController extends Controller
         ]);
 
         $order = Order::findOrFail($request->order_id);
+        if ($order->total_amount > $request->amount_paid) {
+            return back()->withErrors(['error' => 'Le montant du paiement doit être au moins égal au montant total de la commande. ']);
+        }
 
         if ($order->payment) {
-            return back()->withErrors(['payment' => 'This order has already been paid.']);
+            return back()->withErrors(['error' => 'Cette commande a déjà été payée.']);
         }
 
         if ($order->status !== Order::STATUS_READY) {
-            return back()->withErrors(['payment' => 'The order must be ready before recording a payment.']);
+            return back()->withErrors(['error' => 'La commande doit être prête avant d’enregistrer un paiement.']);
         }
 
         Payment::create([
             'order_id' => $order->id,
-            'amount' => $request->amount,
+            'amount_paid' => $request->amount_paid,
+            'amount' => $order->total_amount,
             'payment_method' => 'cash',
             'payment_date' => now(),
             'notes' => $request->notes,
         ]);
 
         // Mark order as paid
-        $order->update(['status' => Order::slugToLabel('paid')]);
+        $order->update(['status' => Order::slugToLabel('Payee')]);
 
         return redirect()->route('admin.orders.show', $order)
             ->with('success', "Payment of {$request->amount} recorded. Order marked as paid!");

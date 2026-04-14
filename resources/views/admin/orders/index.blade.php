@@ -8,9 +8,10 @@
 @section('content')
   @php
     $statutCounts = $counts ?? [];
-    $labels = ['en_attente' => 'En attente', 'en_preparation' => 'En préparation', 'prete' => 'Prêtes', 'payee' => 'Payées'];
-    $badgeCls = ['en_attente' => 'badge-wait', 'en_preparation' => 'badge-prep', 'prete' => 'badge-ready', 'payee' => 'badge-paid'];
-    $dotColor = ['en_attente' => 'var(--s-wait-tx)', 'en_preparation' => 'var(--s-prep-tx)', 'prete' => 'var(--s-ready-tx)', 'payee' => 'var(--s-paid-tx)'];
+    // dd($statutCounts);
+    $labels = ['En attente' => 'En attente', 'En preparation' => 'En préparation', 'Prete' => 'Prête', 'Payee' => 'Payée'];
+    $badgeCls = ['En attente' => 'badge-wait', 'En preparation' => 'badge-prep', 'Prete' => 'badge-ready', 'Payee' => 'badge-paid'];
+    $dotColor = ['En attente' => 'var(--s-wait-tx)', 'En preparation' => 'var(--s-prep-tx)', 'Prete' => 'var(--s-ready-tx)', 'Payee' => 'var(--s-paid-tx)'];
   @endphp
 
   <!-- Chips filtre statut -->
@@ -18,7 +19,7 @@
     <a href="{{ route('admin.orders.index') }}" class="chip {{ !request('statut') ? 'active' : '' }}">
       Toutes <span style="margin-left:4px;opacity:.6;">({{ $total }})</span>
     </a>
-    @foreach(['en_attente', 'en_preparation', 'prete', 'payee'] as $s)
+    @foreach(['En attente', 'En preparation', 'Prete', 'Payee'] as $s)
       <a href="{{ route('admin.orders.index', ['statut' => $s] + request()->except('statut', 'page')) }}"
         class="chip {{ request('statut') === $s ? 'active' : '' }}">
         <i class="bi bi-circle-fill" style="font-size:7px;color:{{ $dotColor[$s] }};"></i>
@@ -70,11 +71,11 @@
             <td>
               <div style="display:flex;gap:5px;">
                 <a href="{{ route('admin.orders.show', $c->id) }}" class="btn-icon ember"><i class="bi bi-eye"></i></a>
-                @if($c->status === 'prete')
+                @if(in_array($c->status, ['Payee', 'Prete']))
                   <a href="{{ route('admin.pdf.generate', $c->id) }}" class="btn-icon ember" target="_blank"><i
                       class="bi bi-file-earmark-pdf"></i></a>
                 @endif
-                @if(!in_array($c->status, ['payee']))
+                @if(!in_array($c->status, ['Payee']))
                   <form method="POST" action="{{ route('admin.orders.destroy', $c->id) }}" style="margin:0;"
                     onsubmit="return confirm('Annuler cette commande ?')">
                     @csrf @method('DELETE')

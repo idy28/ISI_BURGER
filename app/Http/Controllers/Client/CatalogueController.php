@@ -10,26 +10,34 @@ class CatalogueController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Burger::where('available', true)->where('stock', '>', 0);
+        $query = Burger::where('available', true);
 
-        // Filter by name
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-
-        // Filter by minimum price
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
-
-        // Filter by maximum price
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
 
-        $burgers = $query->orderBy('name')->get();
+        $burgers = $query->orderBy('name')->paginate(15)->withQueryString();
         $maxPrice = Burger::where('available', true)->max('price');
 
         return view('client.catalogue', compact('burgers', 'maxPrice'));
+    }
+
+    public function show(int $id)
+    {
+        $burger = Burger::where('available', true)->findOrFail($id);
+
+        $related = Burger::where('available', true)
+            ->where('id', '!=', $id)
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
+        return view('client.burger-show', compact('burger', 'related'));
     }
 }
