@@ -1,59 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ISI_BURGER
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Un projet de boutique de burgers construit avec Laravel — application d'exemple pour la gestion de burgers, commandes, paiements et utilisateurs.
 
-## About Laravel
+## Sommaire
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Description**
+- **Fonctionnalités**
+- **Prérequis**
+- **Installation locale**
+- **Utilisation via Docker**
+- **Migrations & Seeds**
+- **Tests**
+- **Structure du projet**
+- **Contribuer**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Description
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+ISI_BURGER est une application web développée avec Laravel destinée à gérer un catalogue de burgers, les commandes clients, les éléments de commande et les paiements. Ce dépôt contient le code, les migrations, les seeders et la configuration nécessaire pour démarrer rapidement en local ou avec Docker.
 
-## Learning Laravel
+## Fonctionnalités
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Liste et gestion des burgers
+- Création et suivi des commandes
+- Gestion des items d'une commande
+- Enregistrement des paiements
+- API minimale pour consultation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Prérequis
 
-## Laravel Sponsors
+- PHP 8.1+ (ou version compatible indiquée dans `composer.json`)
+- Composer
+- Node.js et npm / Yarn
+- MySQL (ou autre SGBD configuré dans `.env`)
+- Optionnel : Docker et Docker Compose pour environnement conteneurisé
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Installation locale (sans Docker)
 
-### Premium Partners
+1. Cloner le dépôt :
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone <votre-repo-url> ISI_BURGER
+cd ISI_BURGER
+```
 
-## Contributing
+2. Installer les dépendances PHP :
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+```
 
-## Code of Conduct
+3. Installer les dépendances Node et compiler les assets :
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+npm install
+npm run build    # ou `npm run dev` pour le mode développement
+```
 
-## Security Vulnerabilities
+4. Copier et configurer l'environnement :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+cp .env.example .env
+php artisan key:generate
+# Éditez .env pour configurer la connexion BD et autres variables
+```
 
-## License
+5. Préparer le stockage public :
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan storage:link
+```
+
+6. Lancer les migrations et les seeders :
+
+```bash
+php artisan migrate --seed
+```
+
+7. Démarrer le serveur local :
+
+```bash
+php artisan serve
+# Puis ouvrir http://127.0.0.1:8000
+```
+
+## Utilisation via Docker
+
+Le projet inclut un `docker/` et un `docker-compose.yml` pour démarrer un environnement composé (PHP-FPM, Nginx, MySQL).
+
+1. Construire et démarrer les containers :
+
+```bash
+docker-compose up -d --build
+```
+
+2. Installer les dépendances dans le container PHP (si nécessaire) :
+
+```bash
+docker-compose exec php composer install
+docker-compose exec php php artisan migrate --seed
+docker-compose exec php npm install
+docker-compose exec php npm run build
+```
+
+3. Les logs Nginx / PHP et la base de données sont accessibles via les containers.
+
+## Migrations & Seeders
+
+- Les migrations se trouvent dans `database/migrations/`.
+- Les seeders sont dans `database/seeders/` et le point d'entrée est `DatabaseSeeder.php`.
+
+Commandes utiles :
+
+```bash
+php artisan migrate            # exécute les migrations
+php artisan migrate:fresh --seed   # réinitialise la BD et exécute les seeders
+```
+
+## Tests
+
+Exécuter la suite de tests :
+
+```bash
+php artisan test
+# ou
+vendor/bin/phpunit
+```
+
+## Structure importante du projet
+
+- `app/Models/` : modèles Eloquent (`Burger.php`, `Order.php`, `OrderItem.php`, `Payment.php`, `User.php`)
+- `app/Http/Controllers/` : contrôleurs
+- `routes/web.php` : routes web
+- `database/migrations/` : définitions des tables
+- `database/seeders/` : seeders
+- `public/` : fichiers publics (images, assets compilés)
+
+Fichiers clés : `artisan`, `composer.json`, `vite.config.js`, `docker-compose.yml`
+
+## Debug & Logs
+
+- Logs applicatifs : `storage/logs/laravel.log`
+- Cache / vue compilée : `storage/framework/`
+
+## Déploiement
+
+Pour un déploiement simple :
+
+1. Construire les assets (`npm run build`).
+2. Déployer les fichiers sur le serveur.
+3. Exécuter les migrations et seeders en production avec précaution.
+
+## Contribuer
+
+- Ouvrez une issue pour discuter des changements importants.
+- Faites une branche dédiée et un PR clair.
+- Exécutez les tests avant de soumettre : `php artisan test`.
+
+## Licence
+
+Ce projet est fourni sous licence MIT — voir le fichier `LICENSE` si présent.
+
+## Contact
+
+Pour toute question relative à ce dépôt, contactez le mainteneur du projet.
+
+---
+
+Bonne exploration et développement !
